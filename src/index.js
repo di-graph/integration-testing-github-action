@@ -45,7 +45,7 @@ function getDownloadObject() {
     const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
     core.info(`url is ${url}`)
     const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-    return {url: url, binaryName: binaryName}
+    return {url: "https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.0.tar.gz", binaryName: binaryName}
   }
   
 async function setup() {
