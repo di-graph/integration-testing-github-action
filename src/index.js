@@ -1,6 +1,5 @@
-const core = require('@actions/core');
-
-const tc = require('@actions/tool-cache');
+import core from '@actions/core';
+import tc from '@actions/tool-cache';
 
 function getDownloadObject() {
     const url = `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.0.tar.gz`;
