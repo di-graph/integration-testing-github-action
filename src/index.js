@@ -1,5 +1,6 @@
 import core from '@actions/core';
 import io from '@actions/io';
+import os from 'os';
 import tc from '@actions/tool-cache';
 
 function mapArch(arch) {
