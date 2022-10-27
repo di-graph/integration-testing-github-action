@@ -1,0 +1,10 @@
+name: "Setup Integration Testing CLI"
+description: Sets up Integration Testing CLI in your GitHub Actions workflow.
+inputs:
+  version:
+    description: Version of Integration Testing CLI to install.
+    required: false
+    default: v0.0
+runs:
+  using: 'node16'
+  main: 'src/index.js'
