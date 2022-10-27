@@ -21,22 +21,19 @@ function mapOS(os) {
 }
 
 // Rename integration-testing-cli-<platform>-<arch> to integration-testing-cli
-async function renameBinary(
-  pathToCLI,
-  binaryName
-){
-  if (!binaryName.endsWith('.exe')) {
-    const source = path.join(pathToCLI, binaryName);
-    const target = path.join(pathToCLI, 'integration-testing-cli');
-    core.debug(`Moving ${source} to ${target}.`);
-    try {
-      await io.mv(source, target);
-    } catch (e) {
-      core.error(`Unable to move ${source} to ${target}.`);
-      throw e;
-    }
-  }
-}
+// async function renameBinary(
+//   pathToCLI
+// ){
+//     const source = path.join(pathToCLI, "integration-testing-cli");
+//     const target = path.join(pathToCLI, 'integration-testing-cli');
+//     core.debug(`Moving ${source} to ${target}.`);
+//     try {
+//       await io.mv(source, target);
+//     } catch (e) {
+//       core.error(`Unable to move ${source} to ${target}.`);
+//       throw e;
+//     }
+// }
 
 function getDownloadObject() {
     const platform = os.platform();
@@ -55,9 +52,9 @@ async function setup() {
         const pathToTarball = await tc.downloadTool(download.url);
 
         // Extract the tarball onto host runner
-        const pathToCLI = await tc.extractTar(pathToTarball);
-        
-        // await renameBinary(pathToCLI, download.binaryName);
+        let pathToCLI = await tc.extractTar(pathToTarball);
+        pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
+        // await renameBinary(pathToCLI);
 
         // Expose the tool by adding it to the PATH
         core.addPath(pathToCLI);
