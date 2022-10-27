@@ -1,5 +1,6 @@
-import * as core from '@actions/core';
-import * as tc from '@actions/tool-cache';
+const core = require('@actions/core');
+
+const {downloadTool, extractTar} = require('@actions/tool-cache');
 
 function getDownloadObject() {
     const url = `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.0.tar.gz`;
@@ -10,10 +11,10 @@ async function setup() {
     try {
         // Download the specific version of the tool, e.g. as a tarball/zipball
         const download = getDownloadObject();
-        const pathToTarball = await tc.downloadTool(download);
+        const pathToTarball = await downloadTool(download);
 
         // Extract the tarball onto host runner
-        const pathToCLI = await tc.extractTar(pathToTarball);
+        const pathToCLI = await extractTar(pathToTarball);
         
         // Expose the tool by adding it to the PATH
         core.addPath(pathToCLI);
