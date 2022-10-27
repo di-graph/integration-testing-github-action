@@ -57,7 +57,7 @@ async function setup() {
         // Extract the tarball onto host runner
         const pathToCLI = await tc.extractTar(pathToTarball);
         
-        await renameBinary(pathToCLI, download.binaryName);
+        // await renameBinary(pathToCLI, download.binaryName);
 
         // Expose the tool by adding it to the PATH
         core.addPath(pathToCLI);
