@@ -1,4 +1,5 @@
 import core from '@actions/core';
+import fs from 'fs';
 import io from '@actions/io';
 import os from 'os';
 import path from 'path';
@@ -37,12 +38,12 @@ function mapOS(os) {
 
 function getDownloadObject() {
     const platform = os.platform();
-    const filename = `integration-testing-cli-${mapOS(platform)}-${mapArch(os.arch())}`;
+    const filename = `integration-testing-cli.exe`;
     const path = `releases/latest/download`;
     const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
     core.info(`url is ${url}`)
     const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-    return {url: "https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.0.tar.gz", binaryName: binaryName}
+    return {url: "https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.1.tar.gz", binaryName: binaryName}
   }
   
 async function setup() {
@@ -53,8 +54,20 @@ async function setup() {
 
         // Extract the tarball onto host runner
         let pathToCLI = await tc.extractTar(pathToTarball);
-        pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
         // await renameBinary(pathToCLI);
+        fs.readdir(pathToCLI, function (err, files) {
+          //handling error
+          if (err) {
+              return console.log('Unable to scan directory: ' + err);
+          } 
+          //listing all files using forEach
+          files.forEach(function (file) {
+              // Do whatever you want to do with the file
+              console.log(file); 
+          });
+
+          pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
+      });
 
         // Expose the tool by adding it to the PATH
         core.addPath(pathToCLI);
