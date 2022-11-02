@@ -60,7 +60,7 @@ async function setup() {
         core.info(`extracted pathToCLI is ${pathToCLI}`)
         // await renameBinary(pathToCLI);
         
-        pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
+        pathToCLI = path.join(pathToCLI, 'integration-testing-cli-0.1');
 
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
