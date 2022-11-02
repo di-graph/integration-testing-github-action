@@ -71,17 +71,16 @@ async function setup() {
           });
 
           pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
+
+          // Expose the tool by adding it to the PATH
+          core.addPath(pathToCLI);
+
+          core.info(`pathToCLI is ${pathToCLI}`)
+
+          core.info(`Setup Integration Testing CLI`);
+
+
       });
-
-        // Expose the tool by adding it to the PATH
-        core.addPath(pathToCLI);
-
-        core.info(`pathToCLI is ${pathToCLI}`)
-
-        core.info(`Setup Integration Testing CLI`);
-
-
-
     } catch (e) {
         core.setFailed(e);
       }
