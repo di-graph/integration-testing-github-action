@@ -59,6 +59,9 @@ async function setup() {
         let pathToCLI = await tc.extractTar(pathToTarball);
         core.info(`extracted pathToCLI is ${pathToCLI}`)
         // await renameBinary(pathToCLI);
+        
+        pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
+
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
           if (err) {
@@ -69,9 +72,6 @@ async function setup() {
               // Do whatever you want to do with the file
               core.info(file); 
           });
-
-          pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
-
           // Expose the tool by adding it to the PATH
           core.addPath(pathToCLI);
 
