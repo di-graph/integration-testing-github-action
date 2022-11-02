@@ -58,12 +58,12 @@ async function setup() {
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
           if (err) {
-              return console.log('Unable to scan directory: ' + err);
+              return core.setFailed('Unable to scan directory: ' + err);
           } 
           //listing all files using forEach
           files.forEach(function (file) {
               // Do whatever you want to do with the file
-              console.log(file); 
+              core.info(file); 
           });
 
           pathToCLI = path.join(pathToCLI, 'integration-testing-cli');
