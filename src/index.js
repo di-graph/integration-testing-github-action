@@ -50,10 +50,14 @@ async function setup() {
     try {
         // Download the specific version of the tool, e.g. as a tarball/zipball
         const download = getDownloadObject();
+        core.info(`url is ${download.url}`)
+    
         const pathToTarball = await tc.downloadTool(download.url);
+        core.info(`path to tarball is ${pathToTarball}`)
 
         // Extract the tarball onto host runner
         let pathToCLI = await tc.extractTar(pathToTarball);
+        core.info(`extracted pathToCLI is ${pathToCLI}`)
         // await renameBinary(pathToCLI);
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
