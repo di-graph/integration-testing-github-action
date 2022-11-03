@@ -81,11 +81,11 @@ async function setup() {
         // Extract the tarball onto host runner
         let pathToCLI = await tc.extractTar(pathToTarball);
         core.info(`extracted pathToCLI is ${pathToCLI}`)
+
+        pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
         
         await renameBinary(pathToCLI, download.binaryName);
         
-        pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
-
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
           if (err) {
