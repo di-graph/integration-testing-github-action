@@ -25,21 +25,16 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
-// function getDownloadObject(version){
-//   let path = `releases/download/v${version}`;
-//   if (version === 'latest') {
-//     path = `releases/latest/download`;
-//   }
-
-//   const platform = os.platform();
-//   const filename = `integration-testing-cli-${mapOS(platform)}-${mapArch(os.arch())}`;
-//   const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-//   const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
-//   return {
-//     url,
-//     binaryName,
-//   };
-// }
+function getDownloadObject(){
+  const platform = os.platform();
+  const filename = `integration-testing-cli-${mapOS(platform)}-${mapArch(os.arch())}`;
+  const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
+  const url = `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v${version}.tar.gz`;
+  return {
+    url,
+    binaryName,
+  };
+}
 
 // Rename integration-testing-cli-<platform>-<arch> to integration-testing-cli
 async function renameBinary(
@@ -60,15 +55,15 @@ async function renameBinary(
 }
 
 
-function getDownloadObject() {
-    const platform = os.platform();
-    const filename = `integration-testing-cli.exe`;
-    const path = `releases/latest/download`;
-    const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
-    core.info(`url is ${url}`)
-    const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-    return {url: `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v${version}.tar.gz`, binaryName: binaryName}
-  }
+// function getDownloadObject() {
+//     const platform = os.platform();
+//     const filename = `integration-testing-cli.exe`;
+//     const path = `releases/latest/download`;
+//     const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
+//     core.info(`url is ${url}`)
+//     const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
+//     return {url: `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v${version}.tar.gz`, binaryName: binaryName}
+//   }
   
 async function setup() {
     try {
@@ -86,7 +81,8 @@ async function setup() {
         // Extract the tarball onto host runner
         let pathToCLI = await tc.extractTar(pathToTarball);
         core.info(`extracted pathToCLI is ${pathToCLI}`)
-        // await renameBinary(pathToCLI);
+        
+        await renameBinary(pathToCLI, download.binaryName);
         
         pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
 
