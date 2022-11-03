@@ -43,7 +43,7 @@ function getDownloadObject() {
     const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
     core.info(`url is ${url}`)
     const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-    return {url: "https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.2.tar.gz", binaryName: binaryName}
+    return {url: "https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v0.3.tar.gz", binaryName: binaryName}
   }
   
 async function setup() {
@@ -64,7 +64,7 @@ async function setup() {
         core.info(`extracted pathToCLI is ${pathToCLI}`)
         // await renameBinary(pathToCLI);
         
-        pathToCLI = path.join(pathToCLI, 'integration-testing-cli-0.2');
+        pathToCLI = path.join(pathToCLI, 'integration-testing-cli-0.3');
 
         fs.readdir(pathToCLI, function (err, files) {
           //handling error
