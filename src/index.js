@@ -48,6 +48,10 @@ function getDownloadObject() {
   
 async function setup() {
     try {
+        const platform = os.platform();
+        const arch = os.arch();
+        core.info(`platform is ${platform}`)
+        core.info(`arch is ${arch}`)
         // Download the specific version of the tool, e.g. as a tarball/zipball
         const download = getDownloadObject();
         core.info(`url is ${download.url}`)
