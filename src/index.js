@@ -5,7 +5,7 @@ import os from 'os';
 import path from 'path';
 import tc from '@actions/tool-cache';
 
-const version = "0.10"
+const version = "0.11"
 
 // arch in [arm, x32, x64...] (https://nodejs.org/api/os.html#os_os_arch)
 // return value in [amd64, 386, arm]
