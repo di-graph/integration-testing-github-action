@@ -58,44 +58,11 @@ async function getVersion() {
   const version = core.getInput('version');
   if (semver.valid(version)) {
     return semver.clean(version) || version;
-  }
-  releaseVersions = await getAllVersions()
-  core.debug(releaseVersions)
-  if (semver.validRange(version)) {
-    const max = semver.maxSatisfying(releaseVersions, version);
-    if (max) {
-      return semver.clean(max) || version;
-    }
-    core.warning(`${version} did not match any release version.`);
   } else {
-    if (version.length == 0 || version == "latest") {
-      return releaseVersions[0]
-    }
     core.warning(`${version} is not a valid version or range.`);
   }
-  return version;
 }
 
-async function getAllVersions() {
-
-  const githubToken = github.token;
-  const octokit = github.getOctokit(githubToken);
-
-  const allVersions = [];
-  for await (const response of octokit.paginate.iterator(
-    octokit.rest.repos.listReleases,
-    { owner: 'di-graph', repo: 'integration-testing-cli' }
-  )) {
-    for (const release of response.data) {
-      if (release.name) {
-        allVersions.push(release.name);
-      }
-    }
-  }
-
-  return allVersions;
-}
-  
 async function setup() {
     try {
         const platform = os.platform();
