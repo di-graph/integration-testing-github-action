@@ -56,11 +56,7 @@ async function renameBinary(
 
 async function getVersion() {
   const version = core.getInput('version');
-  if (semver.valid(version)) {
-    return semver.clean(version) || version;
-  } else {
-    core.warning(`${version} is not a valid version or range.`);
-  }
+  return version
 }
 
 async function setup() {
