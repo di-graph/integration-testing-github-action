@@ -56,9 +56,43 @@ async function renameBinary(
 
 async function getVersion() {
   const version = core.getInput('version');
-  return version
+  if (semver.valid(version)) {
+    return semver.clean(version) || version;
+  }
+
+  if (semver.validRange(version)) {
+    allVersions = await getAllVersions()
+    core.debug(allVersions)
+    const max = semver.maxSatisfying(allVersions, version);
+    if (max) {
+      core.debug(max)
+      return semver.clean(max) || version;
+    }
+    core.warning(`${version} did not match any release version.`);
+  } else {
+    core.warning(`${version} is not a valid version or range.`);
+  }
+  return version;
 }
 
+async function getAllVersions() {
+  const githubToken = core.getInput('github-token', { required: true });
+  const octokit = github.getOctokit(githubToken);
+
+  const allVersions = [];
+  for await (const response of octokit.paginate.iterator(
+    octokit.rest.repos.listReleases,
+    { owner: 'di-graph', repo: 'integration-testing-cli' }
+  )) {
+    for (const release of response.data) {
+      if (release.name) {
+        allVersions.push(release.name);
+      }
+    }
+  }
+
+  return allVersions;
+}
 async function setup() {
     try {
         const platform = os.platform();
