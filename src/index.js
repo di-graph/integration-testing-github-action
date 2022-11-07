@@ -6,7 +6,6 @@ import os from 'os';
 import path from 'path';
 import semver from 'semver';
 import tc from '@actions/tool-cache';
-import { versions } from 'process';
 
 // arch in [arm, x32, x64...] (https://nodejs.org/api/os.html#os_os_arch)
 // return value in [amd64, 386, arm]
@@ -78,7 +77,8 @@ async function getVersion() {
 }
 
 async function getAllVersions() {
-  const githubToken = core.getInput('github-token', { required: true });
+
+  const githubToken = github.token;
   const octokit = github.getOctokit(githubToken);
 
   const allVersions = [];
