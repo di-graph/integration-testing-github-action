@@ -1,11 +1,12 @@
 import core from '@actions/core';
 import fs from 'fs';
+import github from '@actions/github';
 import io from '@actions/io';
 import os from 'os';
 import path from 'path';
+import semver from 'semver';
 import tc from '@actions/tool-cache';
-
-const version = "0.19"
+import { versions } from 'process';
 
 // arch in [arm, x32, x64...] (https://nodejs.org/api/os.html#os_os_arch)
 // return value in [amd64, 386, arm]
@@ -25,7 +26,7 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
-function getDownloadObject(){
+function getDownloadObject(version){
   const platform = os.platform();
   const filename = `integration-testing-cli-${mapOS(platform)}-${mapArch(os.arch())}`;
   const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
@@ -54,16 +55,46 @@ async function renameBinary(
   }
 }
 
+async function getVersion() {
+  const version = core.getInput('version');
+  if (semver.valid(version)) {
+    return semver.clean(version) || version;
+  }
+  releaseVersions = await getAllVersions()
+  core.debug(releaseVersions)
+  if (semver.validRange(version)) {
+    const max = semver.maxSatisfying(releaseVersions, version);
+    if (max) {
+      return semver.clean(max) || version;
+    }
+    core.warning(`${version} did not match any release version.`);
+  } else {
+    if (version.length == 0 || version == "latest") {
+      return releaseVersions[0]
+    }
+    core.warning(`${version} is not a valid version or range.`);
+  }
+  return version;
+}
 
-// function getDownloadObject() {
-//     const platform = os.platform();
-//     const filename = `integration-testing-cli.exe`;
-//     const path = `releases/latest/download`;
-//     const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
-//     core.info(`url is ${url}`)
-//     const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-//     return {url: `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v${version}.tar.gz`, binaryName: binaryName}
-//   }
+async function getAllVersions() {
+  const githubToken = core.getInput('github-token', { required: true });
+  const octokit = github.getOctokit(githubToken);
+
+  const allVersions = [];
+  for await (const response of octokit.paginate.iterator(
+    octokit.rest.repos.listReleases,
+    { owner: 'di-graph', repo: 'integration-testing-cli' }
+  )) {
+    for (const release of response.data) {
+      if (release.name) {
+        allVersions.push(release.name);
+      }
+    }
+  }
+
+  return allVersions;
+}
   
 async function setup() {
     try {
@@ -72,7 +103,9 @@ async function setup() {
         core.info(`platform is ${platform}`)
         core.info(`arch is ${arch}`)
         // Download the specific version of the tool, e.g. as a tarball/zipball
-        const download = getDownloadObject();
+        const version = await getVersion();
+
+        const download = getDownloadObject(version);
         core.info(`url is ${download.url}`)
     
         const pathToTarball = await tc.downloadTool(download.url);
