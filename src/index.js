@@ -82,8 +82,8 @@ async function setup() {
         let pathToCLI = await tc.extractTar(pathToTarball);
         core.info(`extracted pathToCLI is ${pathToCLI}`)
 
-        pathToCLI = path.join(pathToCLI, "app")
         pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
+        pathToCLI = path.join(pathToCLI, "app")
         
         await renameBinary(pathToCLI, download.binaryName);
         
