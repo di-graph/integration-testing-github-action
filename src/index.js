@@ -61,7 +61,7 @@ async function getVersion() {
   }
 
   if (semver.validRange(version)) {
-    allVersions = await getAllVersions()
+    const allVersions = await getAllVersions()
     core.debug(allVersions)
     const max = semver.maxSatisfying(allVersions, version);
     if (max) {
