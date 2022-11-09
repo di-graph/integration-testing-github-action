@@ -26,10 +26,15 @@ function mapOS(os) {
 }
 
 function getDownloadObject(version){
+  let path = `releases/download/v${version}`;
+  if (version === 'latest') {
+    path = `releases/latest/download`;
+  }
   const platform = os.platform();
   const filename = `integration-testing-cli-${mapOS(platform)}-${mapArch(os.arch())}`;
   const binaryName = platform === 'win32' ? 'integration-testing-cli.exe' : filename;
-  const url = `https://github.com/di-graph/integration-testing-cli/archive/refs/tags/v${version}.tar.gz`;
+  const url = `https://github.com/di-graph/integration-testing-cli/${path}/${filename}.tar.gz`;
+  
   return {
     url,
     binaryName,
@@ -112,29 +117,34 @@ async function setup() {
         let pathToCLI = await tc.extractTar(pathToTarball);
         core.info(`extracted pathToCLI is ${pathToCLI}`)
 
-        pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
+        // pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
         
         await renameBinary(pathToCLI, download.binaryName);
         
-        fs.readdir(pathToCLI, function (err, files) {
-          //handling error
-          if (err) {
-              return core.setFailed('Unable to scan directory: ' + err);
-          } 
-          //listing all files using forEach
-          files.forEach(function (file) {
-              // Do whatever you want to do with the file
-              core.info(file); 
-          });
-          // Expose the tool by adding it to the PATH
-          core.addPath(pathToCLI);
+      //   fs.readdir(pathToCLI, function (err, files) {
+      //     //handling error
+      //     if (err) {
+      //         return core.setFailed('Unable to scan directory: ' + err);
+      //     } 
+      //     //listing all files using forEach
+      //     files.forEach(function (file) {
+      //         // Do whatever you want to do with the file
+      //         core.info(file); 
+      //     });
+      //     // Expose the tool by adding it to the PATH
+      //     core.addPath(pathToCLI);
 
-          core.info(`pathToCLI is ${pathToCLI}`)
+      //     core.info(`pathToCLI is ${pathToCLI}`)
 
-          core.info(`Setup Integration Testing CLI`);
+      //     core.info(`Setup Integration Testing CLI`);
 
 
-      });
+      // });
+        core.addPath(pathToCLI);
+
+        core.info(`pathToCLI is ${pathToCLI}`)
+
+        core.info(`Setup Integration Testing CLI`);
     } catch (e) {
         core.setFailed(e);
       }
