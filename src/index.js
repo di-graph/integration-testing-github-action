@@ -102,8 +102,8 @@ async function setup() {
     try {
         const platform = os.platform();
         const arch = os.arch();
-        core.info(`platform is ${platform}`)
-        core.info(`arch is ${arch}`)
+        // core.info(`platform is ${platform}`)
+        // core.info(`arch is ${arch}`)
         // Download the specific version of the tool, e.g. as a tarball/zipball
         const version = await getVersion();
 
@@ -111,11 +111,11 @@ async function setup() {
         core.info(`url is ${download.url}`)
     
         const pathToTarball = await tc.downloadTool(download.url);
-        core.info(`path to tarball is ${pathToTarball}`)
+        // core.info(`path to tarball is ${pathToTarball}`)
 
         // Extract the tarball onto host runner
         let pathToCLI = await tc.extractTar(pathToTarball);
-        core.info(`extracted pathToCLI is ${pathToCLI}`)
+        // core.info(`extracted pathToCLI is ${pathToCLI}`)
 
         // pathToCLI = path.join(pathToCLI, `integration-testing-cli-${version}`);
         
@@ -142,7 +142,7 @@ async function setup() {
       // });
         core.addPath(pathToCLI);
 
-        core.info(`pathToCLI is ${pathToCLI}`)
+        // core.info(`pathToCLI is ${pathToCLI}`)
 
         core.info(`Setup Integration Testing CLI`);
     } catch (e) {
