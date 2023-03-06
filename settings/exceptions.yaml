@@ -1,0 +1,7 @@
+exceptions:
+  dummy-repo:
+    resource_type:
+      resource_name_1:
+      - DG_CHK_001
+      resource_name_2:
+      - DG_CHK_002
